@@ -1,27 +1,30 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import CategoryPage from "./pages/CategoryPage";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { LiveModal } from "./components/LiveModal";
 
-const queryClient = new QueryClient();
+const App = () => {
+  const [liveOpen, setLiveOpen] = useState(false);
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen flex flex-col bg-gray-900 text-gray-100">
+        <Header onOpenLive={() => setLiveOpen(true)} />
+        <LiveModal open={liveOpen} onClose={() => setLiveOpen(false)} />
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/kategori/:kategori" element={<CategoryPage />} />
+            <Route path="*" element={<Index />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
+    </BrowserRouter>
+  );
+};
 
 export default App;
